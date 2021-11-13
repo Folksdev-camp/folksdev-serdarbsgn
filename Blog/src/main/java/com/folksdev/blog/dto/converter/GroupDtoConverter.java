@@ -6,6 +6,7 @@ import com.folksdev.blog.model.Group;
 import com.folksdev.blog.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class GroupDtoConverter {
                 from.getDescription(),
                 from.getDate(),
                 from.getGroupsTypes(),
-                getUsersList(from.getUsers().stream().collect(Collectors.toList()))
+                getUsersList(new ArrayList<>(from.getUsers()))
         );
     }
 

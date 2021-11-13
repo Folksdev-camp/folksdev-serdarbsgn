@@ -10,5 +10,5 @@ data class CreatePostRequest(
     @field:NotBlank
     val content: String,
     @field:NotNull
-    val topicsTypes: List<TopicsType>?
+    val topicsTypes: List<TopicsType> = listOf(TopicsType.DEFAULT)
 )

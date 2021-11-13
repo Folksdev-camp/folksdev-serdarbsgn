@@ -7,7 +7,6 @@ import com.folksdev.blog.dto.requests.UpdateUserRequest;
 import com.folksdev.blog.exception.UserNotFoundException;
 import com.folksdev.blog.model.Group;
 import com.folksdev.blog.model.User;
-import com.folksdev.blog.repository.GroupRepository;
 import com.folksdev.blog.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class UserService {
     private final GroupService groupService;
 
 
-    public UserService(UserRepository userRepository, GroupService groupService, UserDtoConverter userDtoConverter, GroupRepository groupRepository) {
+    public UserService(UserRepository userRepository, GroupService groupService, UserDtoConverter userDtoConverter) {
         this.userRepository = userRepository;
         this.userDtoConverter = userDtoConverter;
         this.groupService = groupService;

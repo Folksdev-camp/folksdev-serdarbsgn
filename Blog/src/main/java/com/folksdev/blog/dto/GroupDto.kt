@@ -12,5 +12,4 @@ data class GroupDto @JvmOverloads constructor(
     val groupTypes: List<GroupsType>?,
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     val users: List<UserDto>? = ArrayList(),
-    ) {
-}
+    )

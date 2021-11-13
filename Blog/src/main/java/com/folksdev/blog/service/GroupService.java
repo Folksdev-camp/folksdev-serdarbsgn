@@ -4,9 +4,7 @@ import com.folksdev.blog.dto.requests.CreateGroupRequest;
 import com.folksdev.blog.dto.GroupDto;
 import com.folksdev.blog.dto.converter.GroupDtoConverter;
 import com.folksdev.blog.exception.GroupNotFoundException;
-import com.folksdev.blog.exception.UserNotFoundException;
 import com.folksdev.blog.model.Group;
-import com.folksdev.blog.model.User;
 import com.folksdev.blog.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 

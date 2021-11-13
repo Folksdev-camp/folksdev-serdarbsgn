@@ -6,7 +6,9 @@ import com.folksdev.blog.model.Group;
 import com.folksdev.blog.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -17,14 +19,14 @@ public class UserDtoConverter {
                 from.getDateOfBirth(),
                 from.getGender(),
                 from.getEmail(),
-                getGroupsList(from.getGroups().stream().collect(Collectors.toList()))
+                getGroupsList(new ArrayList<>(from.getGroups()))
         );
     }
 
     private List<GroupDto> getGroupsList(List<Group> groupsList) {
         return groupsList.stream()
                 .map(g -> new GroupDto(
-                        g.getId(),
+                        Objects.requireNonNull(g.getId()),
                         g.getName(),
                         g.getDescription(),
                         g.getDate(),

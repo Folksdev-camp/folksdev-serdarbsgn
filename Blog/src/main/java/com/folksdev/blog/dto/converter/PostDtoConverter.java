@@ -6,7 +6,7 @@ import com.folksdev.blog.model.Comment;
 import com.folksdev.blog.model.Post;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,7 @@ public class PostDtoConverter {
                 from.getTitle(),
                 from.getContent(),
                 from.getTopicsTypes(),
-                getCommentsList(from.getComments().stream().collect(Collectors.toList())),
+                getCommentsList(new ArrayList<>(from.getComments())),
                 from.getBlog().getTitle(),
                 from.getBlog().getUser().getUsername()
         );

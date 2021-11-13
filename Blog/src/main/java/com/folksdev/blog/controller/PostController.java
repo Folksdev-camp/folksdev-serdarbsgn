@@ -1,8 +1,6 @@
 package com.folksdev.blog.controller;
 
-import com.folksdev.blog.dto.BlogDto;
 import com.folksdev.blog.dto.PostDto;
-import com.folksdev.blog.dto.requests.CreateBlogRequest;
 import com.folksdev.blog.dto.requests.CreatePostRequest;
 import com.folksdev.blog.service.PostService;
 import org.springframework.http.ResponseEntity;

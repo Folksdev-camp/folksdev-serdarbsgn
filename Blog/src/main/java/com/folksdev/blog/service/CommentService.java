@@ -45,12 +45,4 @@ public class CommentService {
         );
         return commentDtoConverter.convert(commentRepository.save(comment));
     }
-
-//    public List<CommentDto> getAllCommentsOfUser() {
-//
-//    }
-
-//    protected List<Comment> getCommentList(List<String> idList){
-//    return commentRepository.findAllByIdIn(idList);
-//    }
 }
