@@ -42,6 +42,18 @@ public class PostService {
         return postDtoConverter.convert(postRepository.save(post));
     }
 
+    public PostDto updatePostById(String postId, CreatePostRequest createPostRequest) {
+        Post post = findPostById(postId);
+        post = new Post(
+                createPostRequest.getTitle(),
+                createPostRequest.getContent(),
+                createPostRequest.getTopicsTypes(),
+                post.getComments(),
+                post.getBlog()
+        );
+        return postDtoConverter.convert(postRepository.save(post));
+    }
+
     public List<PostDto> getPosts() {
         return postRepository.findAll().stream().map(postDtoConverter::convert)
                 .collect(Collectors.toList());
@@ -61,5 +73,11 @@ public class PostService {
             postRepository.deleteById(postId);
             return "Post successfully deleted from database";
         } else throw new PostNotFoundException("Couldn't find post by id: " + postId);
+    }
+    public String deletePostsByBlog(String blogId) {
+        if (postRepository.existsByBlogId(blogId)) {
+            postRepository.deleteByBlogId(blogId);
+            return "Posts successfully deleted from database of the blog";
+        } else throw new PostNotFoundException("Couldn't find posts of blogid: " + blogId);
     }
 }

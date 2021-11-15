@@ -24,15 +24,26 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogs());
     }
 
-    @GetMapping(value = "/{userid}")
-    public ResponseEntity<BlogDto> getBlogByUserId(@PathVariable String userid){
-        return ResponseEntity.ok(blogService.getBlogByUserId(userid));
+    @GetMapping(value = "/{blogId}")
+    public ResponseEntity<BlogDto> getBlogById(@PathVariable String blogId){
+        return ResponseEntity.ok(blogService.getBlogById(blogId));
     }
 
     @PostMapping(value = "/{userid}")
     public ResponseEntity<BlogDto> createBlog(@PathVariable String userid ,
                                               @RequestBody @Valid CreateBlogRequest createBlogRequest){
         return ResponseEntity.ok(blogService.createBlog(createBlogRequest,userid));
+    }
+
+    @PutMapping(value = "/{userid}")
+    public ResponseEntity<BlogDto> updateBlog(@PathVariable String userid ,
+                                              @RequestBody @Valid CreateBlogRequest updateBlogRequest){
+        return ResponseEntity.ok(blogService.updateBlog(updateBlogRequest,userid));
+    }
+
+    @DeleteMapping(value = "/{blogId}")
+    public ResponseEntity<String> deleteBlog(@PathVariable String blogId){
+        return ResponseEntity.ok(blogService.deleteBlog(blogId));
     }
 
 

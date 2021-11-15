@@ -1,6 +1,7 @@
 package com.folksdev.blog.model
 
 import org.hibernate.annotations.GenericGenerator
+import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
@@ -13,16 +14,16 @@ data class Blog @JvmOverloads constructor(
     val title: String,
     val description: String,
     val content: String,
-    val date: String,
+    val date: LocalDate = LocalDate.now(),
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id" , unique = true)
     val user: User,
 
-    @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "blog", cascade = [CascadeType.ALL])
     val posts: Set<Post>
 
-){
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

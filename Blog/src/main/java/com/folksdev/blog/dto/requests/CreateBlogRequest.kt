@@ -1,5 +1,4 @@
 package com.folksdev.blog.dto.requests
-
 import javax.validation.constraints.NotBlank
 
 data class CreateBlogRequest(
@@ -9,6 +8,5 @@ data class CreateBlogRequest(
     @NotBlank
     val description: String,
     val content: String,
-    val date: String,
 
 )

@@ -1,6 +1,7 @@
 package com.folksdev.blog.model
 
 import org.hibernate.annotations.GenericGenerator
+import java.time.LocalDate
 import javax.persistence.*
 
 
@@ -14,9 +15,11 @@ data class User @JvmOverloads constructor(
     val id: String? = "",
     val name: String,
     val surname: String,
+    @Column(unique = true)
     val username: String,
+    @Column(unique = true)
     val email: String,
-    val dateOfBirth: String,
+    val dateOfBirth: LocalDate,
     val gender: Gender,
 
     @ManyToMany(fetch = FetchType.LAZY )
@@ -27,13 +30,22 @@ data class User @JvmOverloads constructor(
     )
     val groups: Set<Group>,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.REMOVE])
+    val blog: Blog?,
+    // User can only have one blog and a blog can only belong to an user.
+    // When an user is deleted, also the blog should be removed. But when a blog gets removed, user shouldn't be removed.
+    // Using CascadeType.All only here and trying to delete the blog, hibernate wouldn't delete anything and gives no errors to trace.
+    // Using CascadeType.All on blog side, hibernate also deletes the user and anything associated with it; this doesn't suit my database.
+    // So after countless tries on blog.kt, I figured the error on user.kt
+    // Only the parent should have Cascade value, and for one-to-one relations CascadeType.ALL doesnt work properly?
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     val comments: Set<Comment>
 
 ) {
 
-    constructor(name: String, surname: String, username: String, email: String, dateOfBirth: String, gender: Gender) :
-            this("", name, surname, username, email, dateOfBirth, gender, HashSet(), HashSet())
+    constructor(name: String, surname: String, username: String, email: String, dateOfBirth: LocalDate, gender: Gender) :
+            this("", name, surname, username, email, dateOfBirth, gender, HashSet(),null,HashSet())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -49,6 +61,7 @@ data class User @JvmOverloads constructor(
         if (dateOfBirth != other.dateOfBirth) return false
         if (gender != other.gender) return false
         if (groups != other.groups) return false
+        if (blog != other.blog) return false
         if (comments != other.comments) return false
 
         return true

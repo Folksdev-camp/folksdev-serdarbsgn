@@ -8,4 +8,9 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post,String> {
 
     List<Post> findAllByBlogId(String x);
+
+    boolean existsByBlogId(String blogId);
+
+    void deleteByBlogId(String blogId);
+
 }

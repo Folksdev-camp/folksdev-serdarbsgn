@@ -19,9 +19,14 @@ public class CommentController {
     }
 
 
-    @GetMapping("/{postId}")
+    @GetMapping("/post/{postId}")
     public ResponseEntity<List<CommentDto>> getCommentsByPostId(@PathVariable String postId){
         return ResponseEntity.ok(commentService.getCommentsByPostId(postId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommentDto> getCommentById(@PathVariable String id){
+        return ResponseEntity.ok(commentService.getCommentById(id));
     }
 
     @PostMapping("/{postId}/{userId}")
@@ -31,5 +36,15 @@ public class CommentController {
         return ResponseEntity.ok(commentService.createComment(postId,userId,createCommentRequest));
     }
 
+    @PutMapping("/{postId}/{userId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable String postId,
+                                                    @PathVariable String userId,
+                                                    @RequestBody CreateCommentRequest createCommentRequest){
+        return ResponseEntity.ok(commentService.updateComment(postId,userId,createCommentRequest));
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable String id){
+        return ResponseEntity.ok(commentService.deleteComment(id));
+    }
 }

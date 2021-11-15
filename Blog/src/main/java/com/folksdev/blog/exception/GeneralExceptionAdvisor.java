@@ -32,25 +32,48 @@ public class GeneralExceptionAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 
     }
-
+    //USER EXCEPTIONS
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> handle(UserNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserUniqueConstraintsViolatedException.class)
+    public ResponseEntity<?> handle(UserUniqueConstraintsViolatedException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    //GROUP EXCEPTIONS
     @ExceptionHandler(GroupNotFoundException.class)
     public ResponseEntity<?> handle(GroupNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(GroupUniqueConstraintsViolatedException.class)
+    public ResponseEntity<?> handle(GroupUniqueConstraintsViolatedException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    //BLOG EXCEPTIONS
     @ExceptionHandler(BlogNotFoundException.class)
     public ResponseEntity<?> handle(BlogNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(BlogUniqueConstraintsViolatedException.class)
+    public ResponseEntity<?> handle(BlogUniqueConstraintsViolatedException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    // POST EXCEPTIONS
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<?> handle(PostNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    //COMMENT EXCEPTIONS
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<?> handle(CommentNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

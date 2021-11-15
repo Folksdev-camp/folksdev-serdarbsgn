@@ -33,6 +33,11 @@ public class GroupController {
         return ResponseEntity.ok(groupService.createGroup((createGroupRequest)));
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<GroupDto> updateGroup(@PathVariable String id,@RequestBody @Valid CreateGroupRequest createGroupRequest){
+        return ResponseEntity.ok(groupService.updateGroup(id,createGroupRequest));
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id){
         return ResponseEntity.ok(groupService.deleteGroup(id));

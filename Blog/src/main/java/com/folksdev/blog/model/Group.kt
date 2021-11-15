@@ -2,6 +2,7 @@ package com.folksdev.blog.model
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.OnDelete
+import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
@@ -12,9 +13,10 @@ data class Group @JvmOverloads constructor(
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     val id: String? = "",
+    @Column(unique = true)
     val name: String,
     val description: String,
-    val date: String,
+    val date: LocalDate = LocalDate.now(),
 
     @field: ElementCollection(fetch = FetchType.EAGER)
     val groupsTypes: List<GroupsType>,
@@ -55,5 +57,5 @@ data class Group @JvmOverloads constructor(
 }
 
 enum class GroupsType {
-    DEFAULT, COMEDY, GENERAL, DRAMA, NEWS, FANTASY, HORROR
+    DEFAULT, COMEDY, GENERAL, DRAMA, NEWS, FANTASY, HORROR, GAMING
 }

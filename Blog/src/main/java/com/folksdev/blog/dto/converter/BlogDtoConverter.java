@@ -10,6 +10,7 @@ import com.folksdev.blog.model.Post;
 import com.folksdev.blog.model.User;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,14 @@ public class BlogDtoConverter {
                 getPostsList(new ArrayList<>(from.getPosts()))
                 );
     }
+    private UserDto getUser(User user) {
+        return new UserDto(
+                user.getUsername(),
+                user.getDateOfBirth(),
+                user.getGender(),
+                user.getEmail()
+        );
+    }
 
     private List<PostDto> getPostsList(List<Post> postsList) {
         return postsList.stream()
@@ -39,19 +48,12 @@ public class BlogDtoConverter {
                 )).collect(Collectors.toList());
     }
 
-    private UserDto getUser(User user) {
-        return new UserDto(
-                user.getUsername(),
-                user.getDateOfBirth(),
-                user.getGender(),
-                user.getEmail()
-                );
-    }
     private List<CommentDto> getCommentsList(List<Comment> commentsList) {
         return commentsList.stream()
                 .map(c -> new CommentDto(
                         c.getBody(),
-                        c.getDate(),
+                        c.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        "",
                         c.getUser().getUsername()
                 )).collect(Collectors.toList());
     }

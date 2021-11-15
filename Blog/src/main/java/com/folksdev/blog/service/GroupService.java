@@ -4,6 +4,7 @@ import com.folksdev.blog.dto.requests.CreateGroupRequest;
 import com.folksdev.blog.dto.GroupDto;
 import com.folksdev.blog.dto.converter.GroupDtoConverter;
 import com.folksdev.blog.exception.GroupNotFoundException;
+import com.folksdev.blog.exception.GroupUniqueConstraintsViolatedException;
 import com.folksdev.blog.model.Group;
 import com.folksdev.blog.repository.GroupRepository;
 import org.springframework.stereotype.Service;
@@ -23,37 +24,54 @@ public class GroupService {
         this.groupDtoConverter = groupDtoConverter;
     }
 
-    public GroupDto createGroup(CreateGroupRequest createGroupRequest) {
-        Group group = new Group(
-                createGroupRequest.getName(),
-                createGroupRequest.getDescription(),
-                createGroupRequest.getDate(),
-                createGroupRequest.getGroupsTypes()
-        );
-        return groupDtoConverter.convert(groupRepository.save(group));
-    }
-
     public List<GroupDto> getGroups() {
         return groupRepository.findAll().stream().map(groupDtoConverter::convert)
                 .collect(Collectors.toList());
     }
 
-    public GroupDto getGroupById(String id){
+    public GroupDto getGroupById(String id) {
         return groupDtoConverter.convert(findGroupById(id));
     }
 
-    public Group findGroupById(String id){
+    public Group findGroupById(String id) {
         return groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException("Couldn't find group by id: " + id));
     }
 
 
+    public GroupDto createGroup(CreateGroupRequest createGroupRequest) {
+        checkUniqueConstraints(createGroupRequest.getName());
+        Group group = new Group(
+                createGroupRequest.getName(),
+                createGroupRequest.getDescription(),
+                createGroupRequest.getGroupsTypes()
+        );
+        return groupDtoConverter.convert(groupRepository.save(group));
+    }
+
+    public GroupDto updateGroup(String id, CreateGroupRequest createGroupRequest) {
+        Group group = findGroupById(id);
+        checkUniqueConstraints(createGroupRequest.getName());
+        group = new Group(
+                group.getId(),
+                createGroupRequest.getName(),
+                createGroupRequest.getDescription(),
+                group.getDate(),
+                createGroupRequest.getGroupsTypes(),
+                group.getUsers()
+        );
+        return groupDtoConverter.convert(groupRepository.save(group));
+    }
+
+    private void checkUniqueConstraints(String name) {
+        if(groupRepository.existsByName(name))
+        { throw new GroupUniqueConstraintsViolatedException("This group name is already taken!");}
+    }
+
     public String deleteGroup(String id) {
-        if(groupRepository.existsById(id))
-        {
+        if (groupRepository.existsById(id)) {
             groupRepository.deleteById(id);
             return "Group successfully deleted from database";
-        }
-        else throw new GroupNotFoundException("Couldn't find group by id: " + id);
+        } else throw new GroupNotFoundException("Couldn't find group by id: " + id);
     }
 }

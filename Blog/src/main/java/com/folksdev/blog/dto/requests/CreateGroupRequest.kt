@@ -8,7 +8,5 @@ data class CreateGroupRequest(
     val name: String,
     @field:NotBlank
     val description: String,
-    @field:NotBlank
-    val date: String,
     val groupsTypes: List<GroupsType> = listOf(GroupsType.DEFAULT)
 )

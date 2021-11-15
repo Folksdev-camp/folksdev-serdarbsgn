@@ -6,6 +6,7 @@ import com.folksdev.blog.model.Comment;
 import com.folksdev.blog.model.Post;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +29,8 @@ public class PostDtoConverter {
         return commentsList.stream()
                 .map(c -> new CommentDto(
                         c.getBody(),
-                        c.getDate(),
-                        c.getPost().getTitle(),
+                        c.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        "",
                         c.getUser().getUsername()
                 )).collect(Collectors.toList());
     }

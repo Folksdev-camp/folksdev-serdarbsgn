@@ -5,6 +5,7 @@ import com.folksdev.blog.dto.BlogDto;
 import com.folksdev.blog.dto.requests.CreateBlogRequest;
 import com.folksdev.blog.dto.converter.BlogDtoConverter;
 import com.folksdev.blog.exception.BlogNotFoundException;
+import com.folksdev.blog.exception.BlogUniqueConstraintsViolatedException;
 import com.folksdev.blog.model.Blog;
 import com.folksdev.blog.model.User;
 import com.folksdev.blog.repository.BlogRepository;
@@ -29,15 +30,28 @@ public class BlogService {
         this.userService = userService;
     }
 
-    public BlogDto createBlog(CreateBlogRequest createBlogRequest,String userId) {
+    public BlogDto createBlog(CreateBlogRequest createBlogRequest, String userId) {
         User user = userService.findUserById(userId);
+        checkUniqueConstraints(userId);
         Blog blog = new Blog(
                 createBlogRequest.getTitle(),
                 createBlogRequest.getDescription(),
                 createBlogRequest.getContent(),
-                createBlogRequest.getDate(),
                 user,
                 Collections.emptySet()
+        );
+        return blogDtoConverter.convert(blogRepository.save(blog));
+
+    }
+
+    public BlogDto updateBlog(CreateBlogRequest updateBlogRequest, String blogId) {
+        Blog blog = findBlogById(blogId);
+        blog = new Blog(
+                updateBlogRequest.getTitle(),
+                updateBlogRequest.getDescription(),
+                updateBlogRequest.getContent(),
+                blog.getUser(),
+                blog.getPosts()
         );
         return blogDtoConverter.convert(blogRepository.save(blog));
     }
@@ -47,14 +61,26 @@ public class BlogService {
                 .collect(Collectors.toList());
     }
 
-    public BlogDto getBlogByUserId(String userId) {
-        return blogDtoConverter.convert(blogRepository.findByUserId(userId));
-
+    public BlogDto getBlogById(String blogId) {
+        return blogDtoConverter.convert(findBlogById(blogId));
     }
 
     public Blog findBlogById(String id) {
         return blogRepository.findById(id)
                 .orElseThrow(() -> new BlogNotFoundException("Couldn't find blog by id: " + id));
+    }
+
+    public String deleteBlog(String blogId) {
+        if (blogRepository.existsById(blogId)) {
+            blogRepository.deleteById(blogId);
+            return "deleted blog by id :" + blogId;
+        } else throw new BlogNotFoundException("Couldn't find blog by id: " + blogId);
+    }
+
+    public void checkUniqueConstraints(String userId)
+    {
+        if(blogRepository.existsByUserId(userId))
+        { throw new BlogUniqueConstraintsViolatedException("A blog already exists for this user!!");}
     }
 
 }

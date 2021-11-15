@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -15,12 +16,12 @@ public class GroupDtoConverter {
 
     public GroupDto convert(Group from){
         return new GroupDto(
-                from.getId(),
+                Objects.requireNonNull(from.getId()),
                 from.getName(),
                 from.getDescription(),
                 from.getDate(),
                 from.getGroupsTypes(),
-                getUsersList(new ArrayList<>(from.getUsers()))
+                getUsersList(new ArrayList<>(Objects.requireNonNull(from.getUsers())))
         );
     }
 
