@@ -177,7 +177,7 @@ class GroupServiceTest extends TestSupport {
     @Test
     void testUpdateGroup_whenRequestedNameExists_shouldThrowGroupUniqueConstraintsViolatedException(){
         String groupId = "groupId";
-        CreateGroupRequest createGroupRequest = generateGroupRequest();
+        CreateGroupRequest createGroupRequest = new CreateGroupRequest("name1","description",List.of(GroupsType.DEFAULT));
         Group group = generateGroup(groupId);
 
         Mockito.when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));

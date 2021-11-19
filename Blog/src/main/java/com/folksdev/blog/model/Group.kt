@@ -1,7 +1,6 @@
 package com.folksdev.blog.model
 
 import org.hibernate.annotations.GenericGenerator
-import org.hibernate.annotations.OnDelete
 import java.time.LocalDate
 import javax.persistence.*
 
