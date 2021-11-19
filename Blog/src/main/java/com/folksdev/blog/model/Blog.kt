@@ -17,11 +17,11 @@ data class Blog @JvmOverloads constructor(
     val date: LocalDate = LocalDate.now(),
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id" , unique = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", unique = true)
     val user: User,
 
     @OneToMany(mappedBy = "blog", cascade = [CascadeType.ALL])
-    val posts: Set<Post>
+    val posts: Set<Post> = emptySet()
 
 ) {
     override fun equals(other: Any?): Boolean {

@@ -51,7 +51,7 @@ public class GeneralExceptionAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(GroupUniqueConstraintsViolatedException.class)
     public ResponseEntity<?> handle(GroupUniqueConstraintsViolatedException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     //BLOG EXCEPTIONS

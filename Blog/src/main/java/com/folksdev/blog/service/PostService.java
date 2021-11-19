@@ -26,6 +26,7 @@ public class PostService {
     }
 
     public List<PostDto> getPostsByBlogId(String blogId) {
+         blogService.findBlogById(blogId);
          return postRepository.findAllByBlogId(blogId).stream()
                 .map(postDtoConverter::convert).collect(Collectors.toList());
     }
@@ -36,7 +37,6 @@ public class PostService {
                 createPostRequest.getTitle(),
                 createPostRequest.getContent(),
                 createPostRequest.getTopicsTypes(),
-                Collections.emptySet(),
                 blog
         );
         return postDtoConverter.convert(postRepository.save(post));
@@ -45,8 +45,10 @@ public class PostService {
     public PostDto updatePostById(String postId, CreatePostRequest createPostRequest) {
         Post post = findPostById(postId);
         post = new Post(
+                post.getId(),
                 createPostRequest.getTitle(),
                 createPostRequest.getContent(),
+                post.getDate(),
                 createPostRequest.getTopicsTypes(),
                 post.getComments(),
                 post.getBlog()
@@ -69,15 +71,8 @@ public class PostService {
     }
 
     public String deletePost(String postId) {
-        if (postRepository.existsById(postId)) {
+            findPostById(postId);
             postRepository.deleteById(postId);
-            return "Post successfully deleted from database";
-        } else throw new PostNotFoundException("Couldn't find post by id: " + postId);
-    }
-    public String deletePostsByBlog(String blogId) {
-        if (postRepository.existsByBlogId(blogId)) {
-            postRepository.deleteByBlogId(blogId);
-            return "Posts successfully deleted from database of the blog";
-        } else throw new PostNotFoundException("Couldn't find posts of blogid: " + blogId);
+            return "Post successfully deleted from database :" + postId;
     }
 }

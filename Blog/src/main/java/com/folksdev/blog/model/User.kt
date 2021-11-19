@@ -28,24 +28,15 @@ data class User @JvmOverloads constructor(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "group_id")]
     )
-    val groups: Set<Group>,
+    val groups: Set<Group> = emptySet(),
 
     @OneToOne(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    val blog: Blog?,
-    // User can only have one blog and a blog can only belong to an user.
-    // When an user is deleted, also the blog should be removed. But when a blog gets removed, user shouldn't be removed.
-    // Using CascadeType.All only here and trying to delete the blog, hibernate wouldn't delete anything and gives no errors to trace.
-    // Using CascadeType.All on blog side, hibernate also deletes the user and anything associated with it; this doesn't suit my database.
-    // So after countless tries on blog.kt, I figured the error on user.kt
-    // Only the parent should have Cascade value, and for one-to-one relations CascadeType.ALL doesnt work properly?
+    val blog: Blog? = null,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    val comments: Set<Comment>
+    val comments: Set<Comment> = emptySet()
 
 ) {
-
-    constructor(name: String, surname: String, username: String, email: String, dateOfBirth: LocalDate, gender: Gender) :
-            this("", name, surname, username, email, dateOfBirth, gender, HashSet(),null,HashSet())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

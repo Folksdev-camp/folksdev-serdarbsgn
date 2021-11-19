@@ -6,14 +6,16 @@ import com.folksdev.blog.dto.converter.UserDtoConverter;
 import com.folksdev.blog.dto.requests.UpdateUserRequest;
 import com.folksdev.blog.exception.UserNotFoundException;
 import com.folksdev.blog.exception.UserUniqueConstraintsViolatedException;
+import com.folksdev.blog.model.Gender;
 import com.folksdev.blog.model.Group;
 import com.folksdev.blog.model.User;
 import com.folksdev.blog.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,17 +33,15 @@ public class UserService {
     }
 
     public UserDto createUser(CreateUserRequest createUserRequest) {
-        checkUniqueConstraints(createUserRequest.getUsername(),createUserRequest.getEmail());
+        User test = new User("name","surname","","",LocalDate.MIN,Gender.UNKNOWN);
+        checkUniqueConstraints(createUserRequest.getUsername(),createUserRequest.getEmail(),test);
         User user = new User(
                 createUserRequest.getName(),
                 createUserRequest.getSurname(),
                 createUserRequest.getUsername(),
                 createUserRequest.getEmail(),
                 LocalDate.parse(createUserRequest.getDateOfBirth()),
-                createUserRequest.getGender(),
-                Collections.emptySet(),
-                null,
-                Collections.emptySet()
+                createUserRequest.getGender()
         );
         return userDtoConverter.convert(userRepository.save(user));
     }
@@ -61,22 +61,24 @@ public class UserService {
     }
 
     public String deleteUser(String id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return "User successfully deleted from database with id: "+ id ;
-        } else throw new UserNotFoundException("Couldn't find user with id: " + id);
+        findUserById(id);
+        userRepository.deleteById(id);
+        return "User successfully deleted from database with id: "+ id ;
     }
 
     public UserDto updateUserAddGroup(String userId, String groupId) {
         Group g = groupService.findGroupById(groupId);
         User u = findUserById(userId);
-        u.getGroups().add(g);
-        return userDtoConverter.convert(userRepository.save(u));
+        Set<Group> mergedSet = new HashSet<Group>();
+        mergedSet.addAll(u.getGroups());
+        mergedSet.addAll(Set.of(g));
+        User user = new User(u.getId(),u.getName(),u.getSurname(),u.getUsername(),u.getEmail(),u.getDateOfBirth(),u.getGender(),mergedSet,u.getBlog(),u.getComments());
+        return userDtoConverter.convert(userRepository.save(user));
     }
 
     public UserDto updateUser(String id, UpdateUserRequest updateUserRequest) {
-        checkUniqueConstraints(updateUserRequest.getUsername(),updateUserRequest.getEmail());
         User user = findUserById(id);
+        checkUniqueConstraints(updateUserRequest.getUsername(),updateUserRequest.getEmail(),user);
         user = new User(user.getId(),
                 user.getName(),
                 user.getSurname(),
@@ -90,9 +92,9 @@ public class UserService {
         return userDtoConverter.convert(userRepository.save(user));
     }
 
-    public void checkUniqueConstraints(String username, String email)
+    private void checkUniqueConstraints(String username, String email,User user)
     {
-        if(userRepository.existsByUsernameOrEmail(username,email))
+        if(userRepository.existsByUsernameOrEmail(username,email)&&(!user.getUsername().equals(username) || !user.getEmail().equals(email)))
         { throw new UserUniqueConstraintsViolatedException("Username and/or Email already exists!!");}
     }
 }

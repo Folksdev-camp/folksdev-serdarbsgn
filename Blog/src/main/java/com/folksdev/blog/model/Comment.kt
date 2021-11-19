@@ -16,11 +16,11 @@ data class Comment @JvmOverloads constructor(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "post_id")
-    var post: Post,
+    val post: Post,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    var user: User
+    val user: User
 
 ){
     override fun equals(other: Any?): Boolean {

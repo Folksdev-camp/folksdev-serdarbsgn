@@ -29,25 +29,20 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogById(blogId));
     }
 
-    @PostMapping(value = "/{userid}")
-    public ResponseEntity<BlogDto> createBlog(@PathVariable String userid ,
+    @PostMapping(value = "/{userId}")
+    public ResponseEntity<BlogDto> createBlog(@PathVariable String userId ,
                                               @RequestBody @Valid CreateBlogRequest createBlogRequest){
-        return ResponseEntity.ok(blogService.createBlog(createBlogRequest,userid));
+        return ResponseEntity.ok(blogService.createBlog(createBlogRequest,userId));
     }
 
-    @PutMapping(value = "/{userid}")
-    public ResponseEntity<BlogDto> updateBlog(@PathVariable String userid ,
+    @PutMapping(value = "/{blogId}")
+    public ResponseEntity<BlogDto> updateBlog(@PathVariable String blogId ,
                                               @RequestBody @Valid CreateBlogRequest updateBlogRequest){
-        return ResponseEntity.ok(blogService.updateBlog(updateBlogRequest,userid));
+        return ResponseEntity.ok(blogService.updateBlog(updateBlogRequest,blogId));
     }
 
     @DeleteMapping(value = "/{blogId}")
     public ResponseEntity<String> deleteBlog(@PathVariable String blogId){
         return ResponseEntity.ok(blogService.deleteBlog(blogId));
     }
-
-
-
-
-
 }

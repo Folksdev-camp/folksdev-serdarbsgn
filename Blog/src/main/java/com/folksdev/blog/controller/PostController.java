@@ -18,39 +18,36 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+
     @GetMapping
-    public ResponseEntity<List<PostDto>> getPosts(){
+    public ResponseEntity<List<PostDto>> getPosts() {
         return ResponseEntity.ok(postService.getPosts());
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable String postId){
+    public ResponseEntity<PostDto> getPostById(@PathVariable String postId) {
         return ResponseEntity.ok(postService.getPostById(postId));
     }
+
     @GetMapping("/blog/{blogId}")
-    public ResponseEntity<List<PostDto>> getPostsByBlogId(@PathVariable String blogId){
+    public ResponseEntity<List<PostDto>> getPostsByBlogId(@PathVariable String blogId) {
         return ResponseEntity.ok(postService.getPostsByBlogId(blogId));
     }
 
     @PostMapping("/{blogId}")
     public ResponseEntity<PostDto> createPostByBlogId(@PathVariable String blogId,
-                                                      @RequestBody @Valid CreatePostRequest createPostRequest){
-        return ResponseEntity.ok(postService.createPostByBlogId(blogId,createPostRequest));
+                                                      @RequestBody @Valid CreatePostRequest createPostRequest) {
+        return ResponseEntity.ok(postService.createPostByBlogId(blogId, createPostRequest));
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostDto> updatePostById(@PathVariable String blogId,
-                                                      @RequestBody @Valid CreatePostRequest createPostRequest){
-        return ResponseEntity.ok(postService.updatePostById(blogId,createPostRequest));
+    public ResponseEntity<PostDto> updatePostById(@PathVariable String postId,
+                                                  @RequestBody @Valid CreatePostRequest createPostRequest) {
+        return ResponseEntity.ok(postService.updatePostById(postId, createPostRequest));
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable String postId){
+    public ResponseEntity<String> deletePost(@PathVariable String postId) {
         return ResponseEntity.ok(postService.deletePost(postId));
-    }
-
-    @DeleteMapping("/blog/{blogId}")
-    public ResponseEntity<String> deletePostsByBlog(@PathVariable String blogId){
-        return ResponseEntity.ok(postService.deletePostsByBlog(blogId));
     }
 }

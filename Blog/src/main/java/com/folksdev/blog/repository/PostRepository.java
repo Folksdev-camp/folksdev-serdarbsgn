@@ -5,12 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post,String> {
+public interface PostRepository extends JpaRepository<Post, String> {
 
     List<Post> findAllByBlogId(String x);
-
-    boolean existsByBlogId(String blogId);
-
-    void deleteByBlogId(String blogId);
-
 }

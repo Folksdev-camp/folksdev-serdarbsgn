@@ -6,9 +6,11 @@ import com.folksdev.blog.dto.converter.GroupDtoConverter;
 import com.folksdev.blog.exception.GroupNotFoundException;
 import com.folksdev.blog.exception.GroupUniqueConstraintsViolatedException;
 import com.folksdev.blog.model.Group;
+import com.folksdev.blog.model.GroupsType;
 import com.folksdev.blog.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +42,8 @@ public class GroupService {
 
 
     public GroupDto createGroup(CreateGroupRequest createGroupRequest) {
-        checkUniqueConstraints(createGroupRequest.getName());
+        Group test = new Group("","",List.of(GroupsType.DEFAULT));
+        checkUniqueConstraints(createGroupRequest.getName(),test);
         Group group = new Group(
                 createGroupRequest.getName(),
                 createGroupRequest.getDescription(),
@@ -51,7 +54,7 @@ public class GroupService {
 
     public GroupDto updateGroup(String id, CreateGroupRequest createGroupRequest) {
         Group group = findGroupById(id);
-        checkUniqueConstraints(createGroupRequest.getName());
+        checkUniqueConstraints(createGroupRequest.getName(),group);
         group = new Group(
                 group.getId(),
                 createGroupRequest.getName(),
@@ -63,15 +66,14 @@ public class GroupService {
         return groupDtoConverter.convert(groupRepository.save(group));
     }
 
-    private void checkUniqueConstraints(String name) {
-        if(groupRepository.existsByName(name))
+    public void checkUniqueConstraints(String name,Group group) {
+        if(groupRepository.existsByName(name)&&!group.getName().equals(name))
         { throw new GroupUniqueConstraintsViolatedException("This group name is already taken!");}
     }
 
     public String deleteGroup(String id) {
-        if (groupRepository.existsById(id)) {
+            findGroupById(id);
             groupRepository.deleteById(id);
-            return "Group successfully deleted from database";
-        } else throw new GroupNotFoundException("Couldn't find group by id: " + id);
+            return "Group successfully deleted from database with id:" + id;
     }
 }

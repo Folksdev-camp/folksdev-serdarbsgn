@@ -37,8 +37,7 @@ public class BlogService {
                 createBlogRequest.getTitle(),
                 createBlogRequest.getDescription(),
                 createBlogRequest.getContent(),
-                user,
-                Collections.emptySet()
+                user
         );
         return blogDtoConverter.convert(blogRepository.save(blog));
 
@@ -47,9 +46,11 @@ public class BlogService {
     public BlogDto updateBlog(CreateBlogRequest updateBlogRequest, String blogId) {
         Blog blog = findBlogById(blogId);
         blog = new Blog(
+                blog.getId(),
                 updateBlogRequest.getTitle(),
                 updateBlogRequest.getDescription(),
                 updateBlogRequest.getContent(),
+                blog.getDate(),
                 blog.getUser(),
                 blog.getPosts()
         );
@@ -71,10 +72,10 @@ public class BlogService {
     }
 
     public String deleteBlog(String blogId) {
-        if (blogRepository.existsById(blogId)) {
+            findBlogById(blogId);
             blogRepository.deleteById(blogId);
-            return "deleted blog by id :" + blogId;
-        } else throw new BlogNotFoundException("Couldn't find blog by id: " + blogId);
+            return "Blog successfully deleted from database with id:" + blogId;
+
     }
 
     public void checkUniqueConstraints(String userId)

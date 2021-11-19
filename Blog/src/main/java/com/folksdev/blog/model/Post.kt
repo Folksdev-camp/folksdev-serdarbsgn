@@ -19,7 +19,7 @@ data class Post @JvmOverloads constructor(
     val topicsTypes: List<TopicsType>,
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL])
-    val comments: Set<Comment>,
+    val comments: Set<Comment> = emptySet(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_id", referencedColumnName = "blog_id")

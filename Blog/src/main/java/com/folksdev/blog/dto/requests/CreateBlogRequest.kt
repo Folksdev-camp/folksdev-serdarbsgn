@@ -2,11 +2,9 @@ package com.folksdev.blog.dto.requests
 import javax.validation.constraints.NotBlank
 
 data class CreateBlogRequest(
-
-    @NotBlank
+    @field:NotBlank
     val title: String,
-    @NotBlank
+    @field:NotBlank
     val description: String,
     val content: String,
-
 )

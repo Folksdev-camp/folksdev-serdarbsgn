@@ -36,11 +36,10 @@ public class CommentController {
         return ResponseEntity.ok(commentService.createComment(postId,userId,createCommentRequest));
     }
 
-    @PutMapping("/{postId}/{userId}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable String postId,
-                                                    @PathVariable String userId,
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable String id,
                                                     @RequestBody CreateCommentRequest createCommentRequest){
-        return ResponseEntity.ok(commentService.updateComment(postId,userId,createCommentRequest));
+        return ResponseEntity.ok(commentService.updateComment(id,createCommentRequest));
     }
 
     @DeleteMapping("/{id}")
